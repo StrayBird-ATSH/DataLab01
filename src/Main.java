@@ -5,9 +5,16 @@ import java.util.Arrays;
 public class Main {
 
     public static void main(String[] args) {
-        int A[] = {4, 6, 7, 8, 12, 9, 0, 15, 1, 2, 3, 4, 5};
+        int length = 10000;
+        int A[] = new int[length];
+
+        for (int i = 0; i < length; i++)
+            A[i] = length - i;
+        long time = System.currentTimeMillis();
 //        insertionSort(A);
         mergeSort(A);
+        System.out.println("The time used is: " +
+                (System.currentTimeMillis() - time) + " milliseconds");
         System.out.println(Arrays.toString(A));
     }
 
@@ -25,11 +32,9 @@ public class Main {
     }
 
     private static void mergeSort(@NotNull int[] A) {
-//        Simply return terminate this function if the list
-//         meets the end
+//        Simply return terminate this function if the list meets the end
         if (A.length <= 1)
             return;
-
 
         //Divide the n-element sequence to be sorted into two sub-sequences
 //        of n/2 elements each
@@ -47,29 +52,31 @@ public class Main {
     }
 
     private static void merge(@NotNull int[] left, int[] right, int[] result) {
-        //Index Position in left array - starting with left element
-        int iForLeft = 0;
+        /*
+         *Index Position in left array, right array and the merged array,
+         *All starting from the left
+         * */
+        int indexLeft = 0, indexRight = 0, indexMerged = 0;
 
-        //Index Position in right array - starting with left element
-        int iForRight = 0;
-
-        //Index Position in merged array - starting with left position
-        int iMerged = 0;
-
-        //Compare elements at iForLeft and iForRight,
-        //and move smaller element at iMerged
-        while (iForLeft < left.length && iForRight < right.length) {
-            if (left[iForLeft] - right[iForRight] < 0) {
-                result[iMerged] = left[iForLeft];
-                iForLeft++;
+        /*
+         * Compare the elements at the index position from the left array and
+         * the right array, and pull the smaller one down to the merged array to
+         * continuously combine the two arrays in order.
+         * */
+        while (indexLeft < left.length && indexRight < right.length) {
+            if (left[indexLeft] - right[indexRight] < 0) {
+                result[indexMerged] = left[indexLeft];
+                indexLeft++;
             } else {
-                result[iMerged] = right[iForRight];
-                iForRight++;
+                result[indexMerged] = right[indexRight];
+                indexRight++;
             }
-            iMerged++;
+            indexMerged++;
         }
-        //copy remaining elements from both halves - each half will have already sorted elements
-        System.arraycopy(left, iForLeft, result, iMerged, left.length - iForLeft);
-        System.arraycopy(right, iForRight, result, iMerged, right.length - iForRight);
+//        Directly copy the sorted elements from the origin
+        System.arraycopy(left, indexLeft, result,
+                indexMerged, left.length - indexLeft);
+        System.arraycopy(right, indexRight, result,
+                indexMerged, right.length - indexRight);
     }
 }
