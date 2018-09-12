@@ -1,21 +1,21 @@
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-
 public class Main {
 
     public static void main(String[] args) {
-        int length = 10000;
-        int A[] = new int[length];
+        starter(1000000, 50);
+    }
 
+    private static void starter(int length, int k) {
+        int A[] = new int[length];
         for (int i = 0; i < length; i++)
             A[i] = length - i;
         long time = System.currentTimeMillis();
-//        insertionSort(A);
-        mergeSort(A);
-        System.out.println("The time used is: " +
-                (System.currentTimeMillis() - time) + " milliseconds");
-        System.out.println(Arrays.toString(A));
+//            insertionSort(A);
+//            mergeSort(A);
+        combinedMethod(A, k);
+        System.out.println(
+                (System.currentTimeMillis() - time));
     }
 
     private static void insertionSort(@NotNull int A[]) {
@@ -78,5 +78,29 @@ public class Main {
                 indexMerged, left.length - indexLeft);
         System.arraycopy(right, indexRight, result,
                 indexMerged, right.length - indexRight);
+    }
+
+    private static void combinedMethod(@NotNull int[] A, int k) {
+        if (A.length <= 1)
+            return;
+        if (A.length < k) {
+            for (int j = 1; j < A.length; j++) {
+                int key = A[j];
+                int i = j - 1;
+                while (i >= 0 && A[i] > key) {
+                    A[i + 1] = A[i];
+                    i--;
+                }
+                A[i + 1] = key;
+            }
+            return;
+        }
+        int[] left = new int[A.length / 2];
+        int[] right = new int[A.length - left.length];
+        System.arraycopy(A, 0, left, 0, left.length);
+        System.arraycopy(A, left.length, right, 0, right.length);
+        combinedMethod(left, k);
+        combinedMethod(right, k);
+        merge(left, right, A);
     }
 }
